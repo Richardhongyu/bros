@@ -1,0 +1,14 @@
+tool: "bros"
+version: "0.0.0"
+targets:
+  - name: "rros_qemu_raspi_arm64"
+    project: "Linux"
+    branch: "rros"
+    arch: "arm64"
+    config: "raspi_qemu_config"
+    image: "2022-01-28-raspios-bullseye-arm64.img"
+    # build: "build"
+    # run: "run"
+    build: "make LLVM=1 -j80 >compile.txt 2>&1 && tail -10 compile.txt ; python ./finderr.py compile.txt && vim result"
+    run: "qemu-system-aarch64 -nographic  -smp 1 -m 4096 -kernel arch/arm64/boot/Image  -drive if=none,file=/data/bupt-rtos/2022-01-28-raspios-bullseye-arm64.img,id=hd0,format=raw  -machine type=virt -cpu cortex-a57 -append \"root=/dev/vda2 panic=1 rootfstype=ext4 rw\"  -device virtio-blk-device,drive=hd0 -net user,hostfwd=::2224-:22 -net nic"
+
